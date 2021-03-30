@@ -18,5 +18,10 @@ public class Main {
         System.out.println("");
         System.out.println("Disease name having lethality > 1");
         System.out.println(diseaseRepository.getDiseaseNameHavingLethalitySuperiorTo(1));
+
+
+        System.out.println("");
+        System.out.println("Diseases having contagion inferior < 50");
+        System.out.println(diseaseRepository.getDiseasesHavingContagionInferiorTo(60));
     }
 }

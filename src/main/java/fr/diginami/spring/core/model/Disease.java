@@ -35,4 +35,13 @@ public class Disease {
     public void setContagion(Integer contagion) {
         this.contagion = contagion;
     }
+
+    @Override
+    public String toString() {
+        return "Disease{" +
+                "name='" + name + '\'' +
+                ", lethality=" + lethality +
+                ", contagion=" + contagion +
+                '}';
+    }
 }
