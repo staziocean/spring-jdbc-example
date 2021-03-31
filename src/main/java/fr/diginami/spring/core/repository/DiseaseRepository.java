@@ -29,11 +29,45 @@ public class DiseaseRepository {
     }
 
     public List<Disease> getDiseasesHavingContagionInferiorTo(int value) {
-        String sqlQuery = "select name_, lethality, contagiosity from disease where contagiosity < ?";
+        String sqlQuery = "select name_, lethality, contagiosity from disease where contagiosity < ? order by name_";
         return jdbcTemplate.query(
                 sqlQuery,
                 (rs, i) -> new Disease(rs.getString(1), rs.getInt(2), rs.getInt(3)),
                 value);
+    }
+
+    public List<Disease> findAll() {
+        String sqlQuery = "select name_, lethality, contagiosity from disease order by name_";
+        return jdbcTemplate.query(
+                sqlQuery,
+                (rs, i) -> new Disease(rs.getString(1), rs.getInt(2), rs.getInt(3)));
+    }
+
+    public Integer countByName(String name) {
+        String sqlQuery = "select count(1) from disease where name_ = ?";
+        return jdbcTemplate.queryForObject(
+                sqlQuery,
+                Integer.class,
+                name);
+    }
+
+    public void createDisease(Disease disease) {
+        if (countByName(disease.getName()) > 0) {
+            throw new RuntimeException("The disease '" + disease.getName() + "' already exists");
+        }
+
+        String sqlQuery = "insert into disease (name_, lethality, contagiosity) values (?, ?, ?)";
+        jdbcTemplate.update(sqlQuery, disease.getName(), disease.getLethality(), disease.getContagion());
+    }
+
+    public void updateDisease(String name, Disease disease) {
+        String sqlQuery = "update disease set name_ = ?, lethality = ?, contagiosity = ? where name_ = ?";
+        jdbcTemplate.update(sqlQuery, disease.getName(), disease.getLethality(), disease.getContagion(), name);
+    }
+
+    public void deleteDisease(String name) {
+        String sqlQuery = "delete from disease where name_ = ?";
+        jdbcTemplate.update(sqlQuery, name);
     }
 
     @Autowired
